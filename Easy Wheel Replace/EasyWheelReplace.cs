@@ -71,19 +71,14 @@ namespace Easy_Wheel_Replace
         {
             if (targetedwheelsindex != 69420 && wantedwheelsindex != 69420)
             {
-                if(Directory.Exists(@"C:\Users\" + Environment.UserName + @"\Documents\EasyWheelSwapper\Temp"))
-                {
-                    BTN_ReplaceWheels.Enabled = false;
-                    swapwheels();
-                }
-                else
+                if(!(Directory.Exists(@"C:\Users\" + Environment.UserName + @"\Documents\EasyWheelSwapper\Temp")))
                 {
                     Directory.CreateDirectory(@"C:\Users\" + Environment.UserName + @"\Documents\EasyWheelSwapper");
                     Directory.CreateDirectory(@"C:\Users\" + Environment.UserName + @"\Documents\EasyWheelSwapper\Temp");
                     Directory.CreateDirectory(@"C:\Users\" + Environment.UserName + @"\Documents\EasyWheelSwapper\OriginalWheelBackup");
-                    BTN_ReplaceWheels.Enabled=false;
-                    swapwheels();
                 }
+                BTN_ReplaceWheels.Enabled=false;
+                swapwheels();
             }
             else
                 MessageBox.Show("Options not selected", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
