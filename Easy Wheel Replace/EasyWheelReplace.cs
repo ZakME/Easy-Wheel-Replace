@@ -57,7 +57,6 @@ namespace Easy_Wheel_Replace
             else
                 MessageBox.Show("Game Folder already selected", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
-        
         private void PopulateDropdown()
         {
             WantedWheelsList = Directory.GetFiles(GamePath + "\\media\\cars");
@@ -110,6 +109,9 @@ namespace Easy_Wheel_Replace
             var targetmedianame = LST_TargetWheels.SelectedItem.ToString();
             var wantedmedianame = LST_WantedWheels.SelectedItem.ToString();
             string tempfolder = @"C:\Users\" + Environment.UserName + @"\Documents\EasyWheelSwapper\Temp\";
+
+            cleanTemp(tempfolder); // Clean the temp folder beforehand, incase there was an exception that did not allow the folder to be emptied and we start swapping
+
             //TXT_Progress.Items.Add("Replacing wheel: " + LST_TargetWheels.SelectedItem + " with wheel: " + LST_WantedWheels.SelectedItem);
             //TXT_Progress.Items.Add("Backing up original wheel zip to: " + @"C:\Users\" + Environment.UserName + @"\Documents\EasyWheelSwapper\OriginalWheelBackup\" + LST_TargetWheels.SelectedItem);
             if (!File.Exists(@"C:\Users\" + Environment.UserName + @"\Documents\EasyWheelSwapper\OriginalWheelBackup\" + LST_TargetWheels.SelectedItem))
@@ -169,9 +171,21 @@ namespace Easy_Wheel_Replace
 
 
             //TXT_Progress.Items.Add("Deleting contents of: " + tempfolder);
-            Directory.Delete(tempfolder, true);
-            Directory.CreateDirectory(tempfolder);
+            cleanTemp(tempfolder);
             BTN_ReplaceWheels.Enabled = true;
+        }
+
+        void cleanTemp(string tempfolder)
+        {
+            System.IO.DirectoryInfo tmpfold = new DirectoryInfo(tempfolder);
+            foreach (FileInfo file in tmpfold.EnumerateFiles())
+            {
+                file.Delete();
+            }
+            foreach (DirectoryInfo dir in tmpfold.EnumerateDirectories())
+            {
+                dir.Delete(true);
+            }
         }
     }
 }
