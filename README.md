@@ -36,5 +36,5 @@ Does not work on "welcome pack" cars due to models being named differently to th
 
 3. Save the game folder so it doesnt need to be selected on each start.
 
-4. A quick way to restore wheel zips to their original state using the files in OriginalWheelBackups.
+4. A quick way to restore wheel zips to their original state using the files in OriginalWheelBackups. (Likely not working, will include anyways. High chance of       bricking game)
 
