@@ -30,7 +30,7 @@ Materials are currently ignored.
 Does not work on "welcome pack" cars due to models being named differently to the actual media name
 
 # TODO
-1. Create a proper progress log to show to the user (currently commented out)
+1. ~~Create a proper progress log to show to the user (currently commented out)~~ Likely working/done
 
 2. Add more options like a custom backup location and if the user wants the front or rear car wheel if the car has two.
 
