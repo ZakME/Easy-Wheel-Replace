@@ -30,6 +30,7 @@ namespace Easy_Wheel_Replace
         {
             if (PathCorrect==false)
             {
+                Log.Items.Add("Opening folder dialog...");
                 OpenFH5Folder.ShowDialog();
                 if (OpenFH5Folder.FileName != "")
                 {
@@ -37,6 +38,7 @@ namespace Easy_Wheel_Replace
 
                     if (File.Exists(GamePath + "\\ForzaHorizon5.exe"))
                     {
+                        Log.Items.Add("Game folder selected!");
                         TXT_Gamepath.Text = new FileInfo(OpenFH5Folder.FileName).DirectoryName;
                         PathCorrect = true;
                         PopulateDropdown();
@@ -44,18 +46,18 @@ namespace Easy_Wheel_Replace
                     else
                     {
                         PathCorrect = false;
-                        MessageBox.Show("Folder selected does not contain the ForzaHorizon5.exe file \nTry again", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        Log.Items.Add("Folder selected does not contain the ForzaHorizon5.exe file. \nTry again");
                     }
                 }
                 else
                 {
                     PathCorrect = false;
-                    MessageBox.Show("No location selected. \nTry again", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Log.Items.Add("No location selected. \nTry again");
                 }
               
             }
             else
-                MessageBox.Show("Game Folder already selected", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Log.Items.Add("Game Folder already selected");
         }
         private void PopulateDropdown()
         {
@@ -112,20 +114,20 @@ namespace Easy_Wheel_Replace
 
             cleanTemp(tempfolder); // Clean the temp folder beforehand, incase there was an exception that did not allow the folder to be emptied and we start swapping
 
-            //TXT_Progress.Items.Add("Replacing wheel: " + LST_TargetWheels.SelectedItem + " with wheel: " + LST_WantedWheels.SelectedItem);
-            //TXT_Progress.Items.Add("Backing up original wheel zip to: " + @"C:\Users\" + Environment.UserName + @"\Documents\EasyWheelSwapper\OriginalWheelBackup\" + LST_TargetWheels.SelectedItem);
+            Log.Items.Add("Replacing wheel: " + LST_TargetWheels.SelectedItem + " with wheel: " + LST_WantedWheels.SelectedItem);
+            Log.Items.Add("Backing up original wheel zip to: " + @"C:\Users\" + Environment.UserName + @"\Documents\EasyWheelSwapper\OriginalWheelBackup\" + LST_TargetWheels.SelectedItem);
             if (!File.Exists(@"C:\Users\" + Environment.UserName + @"\Documents\EasyWheelSwapper\OriginalWheelBackup\" + LST_TargetWheels.SelectedItem))
                 File.Copy(targetwheelpath, @"C:\Users\" + Environment.UserName + @"\Documents\EasyWheelSwapper\OriginalWheelBackup\" + LST_TargetWheels.SelectedItem);
-            //TXT_Progress.Items.Add("Moving wheels to " + tempfolder);
+            Log.Items.Add("Moving wheels to " + tempfolder);
             File.Copy(wantedwheelpath, tempfolder + LST_WantedWheels.SelectedItem);
             File.Move(targetwheelpath, tempfolder + LST_TargetWheels.SelectedItem);
-            //TXT_Progress.Items.Add("Extracting Wheel zips to: " + tempfolder);
+            Log.Items.Add("Extracting Wheel zips to: " + tempfolder);
             ZipFile.ExtractToDirectory(tempfolder + LST_WantedWheels.SelectedItem, tempfolder + @"\W\");
             ZipFile.ExtractToDirectory(tempfolder + LST_TargetWheels.SelectedItem, tempfolder + @"\T\");
             Directory.CreateDirectory(tempfolder + @"\N\");
             Directory.CreateDirectory(tempfolder + @"\N\Textures");
             Directory.CreateDirectory(tempfolder + @"\N\Textures\AO\");
-            //TXT_Progress.Items.Add("Renaming and replacing wheel files");
+            Log.Items.Add("Renaming and replacing wheel files");
             File.Move(tempfolder + @"\W\scene\_library\scene\Wheels\" + wantedmedianame.Substring(0, wantedmedianame.Length - 4) + "_wheelLF.modelbin", tempfolder + @"\N\" + targetmedianame.Substring(0, targetmedianame.Length - 4) + "_wheelLF.modelbin");
 
             if (File.Exists(tempfolder + @"\W\Textures\AO\" + wantedmedianame.Substring(0, wantedmedianame.Length - 4) + "_wheelLF_AO.swatchbin"))
@@ -135,7 +137,7 @@ namespace Easy_Wheel_Replace
             else
             {
                 var found = false;
-                //TXT_Progress.Items.Add("Texture not present in car zip. Searching Textures.zip");
+                Log.Items.Add("Texture not present in car zip. Searching Textures.zip");
                 using (ZipArchive archive = ZipFile.OpenRead(GamePath + @"\media\cars\_library\Textures.zip"))
                 {
                     foreach (ZipArchiveEntry entry in archive.Entries)
@@ -150,7 +152,7 @@ namespace Easy_Wheel_Replace
                 }
                 if (!found)
                 {
-                    //TXT_Progress.Items.Add("Texture not present in Textures.zip. Searching Textures_pri_45.zip");
+                    Log.Items.Add("Texture not present in Textures.zip. Searching Textures_pri_45.zip");
                     using (ZipArchive archive = ZipFile.OpenRead(GamePath + @"\media\cars\_library\Textures_pri_45.zip"))
                     {
                         foreach (ZipArchiveEntry entry in archive.Entries)
@@ -166,17 +168,18 @@ namespace Easy_Wheel_Replace
 
 
             }
-            //TXT_Progress.Items.Add("Creating new zip to replace: " + targetwheelpath);
+            Log.Items.Add("Creating new zip to replace: " + targetwheelpath);
             ZipFile.CreateFromDirectory(tempfolder + @"\N\", targetwheelpath);
 
 
-            //TXT_Progress.Items.Add("Deleting contents of: " + tempfolder);
+            Log.Items.Add("Deleting contents of: " + tempfolder);
             cleanTemp(tempfolder);
             BTN_ReplaceWheels.Enabled = true;
         }
 
         void cleanTemp(string tempfolder)
         {
+            Log.Items.Add("Cleaning temp...");
             System.IO.DirectoryInfo tmpfold = new DirectoryInfo(tempfolder);
             foreach (FileInfo file in tmpfold.EnumerateFiles())
             {
@@ -186,6 +189,11 @@ namespace Easy_Wheel_Replace
             {
                 dir.Delete(true);
             }
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
